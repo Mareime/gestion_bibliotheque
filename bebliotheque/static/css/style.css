@@ -1,0 +1,34 @@
+/* Personnalisation des couleurs et des marges */
+body {
+    background-color: #f8f9fa;
+}
+
+.navbar {
+    margin-bottom: 30px;
+}
+
+footer {
+    background-color: #343a40;
+    color: #fff;
+}
+
+.signup-card {
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Tableau personnalisé */
+.table th {
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+.text-center {
+    text-align: center;
+}

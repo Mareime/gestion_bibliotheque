@@ -1,0 +1,22 @@
+body {
+    background: #f8f9fa;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.login-card {
+    max-width: 400px;
+    width: 100%;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    background: #fff;
+}
+.login-card .btn-primary {
+    background: #500b9a;
+    border: none;
+}
+.login-card .btn-primary:hover {
+    background: #6a11cb;
+}
