@@ -1,0 +1,13 @@
+<form action="{% url 'Emprinter' book.id %}" method="POST">
+    {% csrf_token %}
+    <div class="modal-body">
+        <div class="mb-3">
+            <label for="return_date" class="form-label">Date de retour</label>
+            <input type="date" class="form-control" id="return_date" name="return_date" required>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+        <button type="submit" class="btn btn-primary">Emprunter</button>
+    </div>
+</form>

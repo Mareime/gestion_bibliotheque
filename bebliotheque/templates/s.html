@@ -64,9 +64,15 @@
                             <td>{{ books.publication_year }}</td>
                             <td>{{ books.copies_available }}</td>
                             <td>
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                   Emprinter
-                                  </button>
+                                <td>
+                                    <a href="{% url 'aller_emprunter' books.id %}">
+                                        <button type="button" class="btn btn-primary">
+                                            Emprunter
+                                        </button>
+                                    </a>
+                                </td>
+                                   
+                                 
                             </td>
                         </tr>
                         {% endfor %}
@@ -75,24 +81,30 @@
                 </table>
             </div>
         </div>
-        <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!-- Modal pour choisir la date de retour -->
+<!-- <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Confirmation d'emprunt</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                Êtes-vous sûr de vouloir emprunter ce livre ?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                <button type="button" class="btn btn-primary">Confirmer</button>
-            </div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Choisissez une date de retour</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
+        <form action="Emprinter/{{books.id}}" method="post">
+            {% csrf_token %}
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="return_date" class="form-label">Date de retour</label>
+            <input type="date" class="form-control" id="return_date" name="return_date" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+          <button type="submit" class="btn btn-primary">Emprunter</button>
+        </div>
+        </form>
+      </div>
     </div>
-</div>
+  </div> -->
 
     </div>
 <!-- je veut faie une modification  -->
