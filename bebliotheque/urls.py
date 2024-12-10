@@ -11,4 +11,5 @@ urlpatterns = [
     path('profile/', views.User_books, name='profile'),
     path('return_book/<int:id>/', views.return_book, name='return_book'),  # Correction ici
     path('admin/Dashbord/', views.Dashbord, name='Dashbord'),
+    path('admin/books',views.AdminBooks, name='adminbooks')
 ]

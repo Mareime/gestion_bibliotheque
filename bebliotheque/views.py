@@ -23,7 +23,19 @@ def login(request):
         try:
             admin = Admin.objects.get(email=email, password=password)
             if admin:
-                return render(request, "admin/dashbord.html")
+                 request.session["id_admin"] = admin.id
+                 users = User.objects.count()
+                 total_books = Book.objects.count()
+                 available_books = Book.objects.filter(copies_available__gt=0).count()
+                 borrowings = Borrowing.objects.filter(returned=False).count()
+
+                 return render(request, "admin/Dashbord.html", {
+                'users': users,
+                'total_books': total_books,
+                'available_books': available_books,
+                'borrowings': borrowings,
+                    })
+                
         except Admin.DoesNotExist:
             pass
         
@@ -76,11 +88,11 @@ def Emprinter(request, id):
             return HttpResponse("La date de retour ne peut pas être antérieure à la date actuelle.", status=400)
 
         if book.copies_available <= 0:
-            return HttpResponse("Désolé, il n'y a plus de copies disponibles.", status=400)
+            return HttpResponse("Desole, il n'y a plus de copies disponibles.", status=400)
 
         # Vérifier si l'utilisateur a déjà emprunté ce livre
         if Borrowing.objects.filter(user=user, book=book, returned=False).exists():
-            return HttpResponse("Vous avez déjà emprunté ce livre.", status=400)
+            return HttpResponse("Vous avez deja emprunté ce livre.", status=400)
 
         # Réduire les copies disponibles et enregistrer l'emprunt
         book.copies_available -= 1
@@ -104,7 +116,7 @@ def Dashbord(request):
     users = User.objects.count()
     total_books = Book.objects.count()
     available_books = Book.objects.filter(copies_available__gt=0).count()
-    borrowings = Borrowing.objects.filter(returned=0).count()
+    borrowings = Borrowing.objects.filter(returned=False).count()
 
     return render(request, "admin/Dashbord.html", {
         'users': users,
@@ -137,9 +149,15 @@ def return_book(request, id):
     book.save()
 
     # Rediriger après le retour
-    return redirect('profile')  # Redirige vers le profil de l'utilisateur après le retour
+    return redirect('profile')  
 
 # Page d'accueil utilisateur
 def home_user(request):
     books = Book.objects.all().values()
     return render(request, 's.html', {'books': books})
+
+
+def AdminBooks(request):
+    if request.method == "GET":
+        books = Book.objects.all()
+        return render(request, 'admin/livre.html', {'books': books})
