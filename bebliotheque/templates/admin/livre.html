@@ -12,93 +12,106 @@
 </head>
 <body>
 
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <h3 class="text-center text-white">Admin</h3>
-        <a href="#">Tableau de bord</a>
-        <a href="{% url 'adminbooks' %}">Livres</a>
-        <a href="#">Utilisateurs</a>
-        <a href="#">Emprunts</a>
-        <a href="{% url 'login' %}">Se déconnecter</a>
-    </div>
+    {% include 'sidebar.html' %}
 
     <!-- Main Content -->
-    <div class="main-content">
-        <div class="container mt-5">
-            <!-- Stats Cards -->
-            <div class="card-deck">
-                <div class="card bg-primary text-white">
-                    <div class="card-body">
-                        <h5 class="card-title">Total Livres</h5>
-                        <p class="card-text">{{ total_books }}</p>
-                    </div>
-                </div>
-                <div class="card bg-success text-white">
-                    <div class="card-body">
-                        <h5 class="card-title">Livres Disponibles</h5>
-                        <p class="card-text">{{ available_books }}</p>
-                    </div>
-                </div>
-                <div class="card bg-danger text-white">
-                    <div class="card-body">
-                        <h5 class="card-title">Emprunts en Cours</h5>
-                        <p class="card-text">{{ borrowings }}</p>
-                    </div>
-                </div>
-            </div>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Gestion des Livres</h1>
+
+        <!-- Bouton Ajouter un livre -->
+        <div class="d-flex justify-content-end mb-3">
+            <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#addBookModal">Ajouter un Livre</button>
         </div>
 
-        <!-- Gestion des Livres -->
-        <div class="container mt-5">
-            <h1 class="text-center mb-4">Gestion des Livres</h1>
+        <!-- Tableau des livres -->
+        <table class="table table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Titre</th>
+                    <th>Auteur</th>
+                    <th>Date de Publication</th>
+                    <th>Copies Disponibles</th>
+                    <th>Genre</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for book in books %}
+                <tr>
+                    <td>{{ book.id }}</td>
+                    <td>{{ book.title }}</td>
+                    <td>{{ book.author }}</td>
+                    <td>{{ book.publication_year }}</td>
+                    <td>{{ book.copies_available }}</td>
+                    <td>{{ book.genre }}</td>
+                    <td>
+                        <!-- Bouton Modifier -->
+                        <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editBookModal{{ book.id }}">Modifier</button>
+                        
+                        <!-- Bouton Supprimer -->
+                        <a href="{% url 'deletelivre' book.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce livre ?');">
+                            Supprimer
+                        </a>
+                    </td>
+                </tr>
 
-            <!-- Bouton Ajouter un livre -->
-            <div class="d-flex justify-content-end mb-3">
-                <a href="#" class="btn btn-black" data-bs-toggle="modal" data-bs-target="#addBookModal">Ajouter un Livre</a>
-            </div>
-
-            <!-- Tableau des livres -->
-            <table class="table table-striped">
-                <thead class="table-dark">
-                    <tr>
-                        <th>#</th>
-                        <th>Titre</th>
-                        <th>Auteur</th>
-                        <th>Date de Publication</th>
-                        <th>Copies Disponibles</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for book in books %}
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>
-                            <a href="#" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editBookModal">Modifier</a>
-                            <a href="#" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteBookModal">Supprimer</a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                <!-- Modal Modifier un Livre -->
+                <div class="modal fade" id="editBookModal{{ book.id }}" tabindex="-1" aria-labelledby="editBookModalLabel{{ book.id }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form action="{% url 'deletelivre' book.id %}" method="POST">
+                                {% csrf_token %}
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editBookModalLabel{{ book.id }}">Modifier le Livre</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="title" class="form-label">Titre</label>
+                                        <input type="text" class="form-control" name="title" value="{{ book.title }}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="author" class="form-label">Auteur</label>
+                                        <input type="text" class="form-control" name="author" value="{{ book.author }}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="copies_available" class="form-label">Copies disponibles</label>
+                                        <input type="number" class="form-control" name="copies_available" value="{{ book.copies_available }}" min="0" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="genre" class="form-label">Genre</label>
+                                        <input type="text" class="form-control" name="genre" value="{{ book.genre }}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="publication_date" class="form-label">Date de publication</label>
+                                        <input type="number" class="form-control" name="publication_date" value="{{ book.publication_year }}" required>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 
-    <!-- Modale Ajouter un Livre -->
+    <!-- Modal Ajouter un Livre -->
     <div class="modal fade" id="addBookModal" tabindex="-1" aria-labelledby="addBookModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addBookModalLabel">Ajouter un Livre</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="" method="POST">
-                        {% csrf_token %}
+                <form action="{% url 'adminlivres' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addBookModalLabel">Ajouter un Livre</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
                         <div class="mb-3">
                             <label for="title" class="form-label">Titre</label>
                             <input type="text" class="form-control" id="title" name="title" required>
@@ -109,15 +122,22 @@
                         </div>
                         <div class="mb-3">
                             <label for="publication_date" class="form-label">Date de Publication</label>
-                            <input type="date" class="form-control" id="publication_date" name="publication_date" required>
+                            <input type="number" class="form-control" id="publication_date" name="publication_date" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="genre" class="form-label">Genre</label>
+                            <input type="text" class="form-control" id="genre" name="genre" required>
                         </div>
                         <div class="mb-3">
                             <label for="copies_available" class="form-label">Copies Disponibles</label>
                             <input type="number" class="form-control" id="copies_available" name="copies_available" min="0" required>
                         </div>
-                        <button type="submit" class="btn btn-black">Ajouter</button>
-                    </form>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-dark">Ajouter</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

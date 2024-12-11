@@ -161,3 +161,54 @@ def AdminBooks(request):
     if request.method == "GET":
         books = Book.objects.all()
         return render(request, 'admin/livre.html', {'books': books})
+    elif request.method == "POST":
+        title = request.POST.get('title')
+        author = request.POST.get('author')
+        copies_available = request.POST.get('copies_available')
+        genre = request.POST.get('genre')
+        publication_date = request.POST.get('publication_date')
+        book = Book(title=title, author=author, copies_available=copies_available, publication_year=publication_date,genre=genre)
+        book.save()
+        return redirect('adminlivres')
+    
+
+def deletelivre(request,id):
+    if request.method == "GET":
+        book = get_object_or_404(Book, id=id)
+        book.delete()
+        return redirect('adminlivres')
+    elif request.method == "POST":
+        # Récupérer le livre à mettre à jour
+        book = get_object_or_404(Book, id=id)
+
+        # Récupérer les données du formulaire
+        title = request.POST.get('title')
+        author = request.POST.get('author')
+        copies_available = request.POST.get('copies_available')
+        genre = request.POST.get('genre')
+        publication_date = request.POST.get('publication_date')
+
+        # Valider et mettre à jour les champs
+        if title:
+            book.title = title
+        if author:
+            book.author = author
+        if copies_available:
+            book.copies_available = copies_available
+        if genre:
+            book.genre = genre
+        if publication_date:
+            book.publication_year = publication_date
+
+        # Sauvegarder les modifications
+        book.save()
+
+        # Rediriger vers la page d'administration
+        return redirect('adminlivres')
+
+
+    
+    
+
+
+        
